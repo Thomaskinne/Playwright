@@ -1,5 +1,5 @@
-import { Page } from '@playwright/test';
-import { LOGIN_URL, users } from '../config';
+import { Page, Locator } from '@playwright/test';
+import { LOGIN_URL } from '../config';
 
 export class LoginPage {
   private page: Page;
@@ -7,6 +7,7 @@ export class LoginPage {
   private passwordInput = '[data-tests="password"]'; 
   private loginButton = '[data-tests="login-button"]';
   private userNames = '[data-test="login-credentials"]';
+  private errorMessageLocator = '[data-test="error"]';
 
   constructor(page: Page) {
     this.page = page;
@@ -32,14 +33,18 @@ export class LoginPage {
     await this.page.click(this.loginButton);
   }
 
-  // Perform the full login process using a user object from config
+  // Perform the full login process using a user object
   async login(user: { username: string; password: string }): Promise<void> {
     await this.enterUsername(user.username);
     await this.enterPassword(user.password);
     await this.clickLogin();
   }
 
-  // Optional: verify all usernames displayed on the login page
+  // Verify the displayed error message
+  async getErrorMessage(): Promise<Locator> {
+    return this.page.locator(this.errorMessageLocator);
+  }
+  // Verify all usernames displayed on the login page
   async verifyUserNames(): Promise<string[]> {
     return this.page.locator(this.userNames).allTextContents();
   }
