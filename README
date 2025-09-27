@@ -1,0 +1,27 @@
+This project is a Playwright + TypeScript automation suite for testing the functionality of SauceDemo. It demonstrates the use of Page Object Model (POM), centralized configuration, and reusable test methods to build maintainable and scalable automated tests.
+
+Features
+
+Page Object Model (POM): Encapsulates page elements and actions in classes for clean, reusable, and maintainable code.
+
+Centralized configuration: Stores URLs, test users, and passwords in a config file for easy updates and environment management.
+
+Reusable methods: Supports granular actions like entering username, entering password, clicking login, and a full login flow.
+
+Multi-user testing: Easily run tests for different user types (standard, locked out, problem, performance glitch, etc.) using a single user object structure.
+
+Verification utilities: Methods to verify UI elements like displayed login credentials.
+
+Playwright + TypeScript: Leverages modern testing tools with type safety, async/await syntax, and robust browser automation.
+
+Project Structure:
+/pages
+  └── LoginPage.ts       # POM class for login page
+/tests
+  └── login.spec.ts      # Test scenarios using LoginPage
+/config
+  └── config.ts          # URLs, users, and passwords
+
+Commands:
+Install dependencies: npm install
+Run tests: npx playwright test
