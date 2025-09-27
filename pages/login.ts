@@ -7,7 +7,6 @@ export class LoginPage {
   private passwordInput = '[data-tests="password"]'; 
   private loginButton = '[data-tests="login-button"]';
   private userNames = '[data-test="login-credentials"]';
-  private password = '[data-test="login-password"]';
 
   constructor(page: Page) {
     this.page = page;
