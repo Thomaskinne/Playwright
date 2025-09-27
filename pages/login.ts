@@ -1,10 +1,10 @@
-import { Page, Locator } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { LOGIN_URL } from '../config';
 
 export class LoginPage {
   private page: Page;
   private usernameInput = '[data-tests="username"]';
-  private passwordInput = '[data-tests="password"]'; 
+  private passwordInput = '[data-tests="password"]';
   private loginButton = '[data-tests="login-button"]';
   private userNames = '[data-test="login-credentials"]';
   private errorMessageLocator = '[data-test="error"]';
@@ -13,39 +13,35 @@ export class LoginPage {
     this.page = page;
   }
 
-  // Navigate to the login page
   async navigateTo(): Promise<void> {
     await this.page.goto(LOGIN_URL);
   }
 
-  // Fill in the username
   async enterUsername(username: string): Promise<void> {
     await this.page.fill(this.usernameInput, username);
   }
 
-  // Fill in the password
   async enterPassword(password: string): Promise<void> {
     await this.page.fill(this.passwordInput, password);
   }
 
-  // Click the login button
   async clickLogin(): Promise<void> {
     await this.page.click(this.loginButton);
   }
 
-  // Perform the full login process using a user object
   async login(user: { username: string; password: string }): Promise<void> {
     await this.enterUsername(user.username);
     await this.enterPassword(user.password);
     await this.clickLogin();
   }
 
-  // Verify the displayed error message
-  async getErrorMessage(): Promise<Locator> {
-    return this.page.locator(this.errorMessageLocator);
+  // TS-safe: always returns a string, never null
+  async getErrorMessage(): Promise<string> {
+    const text = await this.page.locator(this.errorMessageLocator).textContent();
+    return text || '';
   }
-  // Verify all usernames displayed on the login page
-  async verifyUserNames(): Promise<string[]> {
+
+  async getDisplayedUserNames(): Promise<string[]> {
     return this.page.locator(this.userNames).allTextContents();
   }
 }
