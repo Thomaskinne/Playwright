@@ -18,7 +18,7 @@ test.describe('SauceDemo Login Tests', () => {
   test('Locked out user should see account locked error', async () => {
     await loginPage.login(users.lockedOut);
     const errorText = await loginPage.getErrorMessage();
-    await expect(errorText).toContain('Sorry, this user has been locked out.');
+    await expect(errorText).toContain('Epic sadface: Sorry, this user has been locked out.');
   });
 
   test('Problem user should log in but trigger problem behaviors', async ({ page }) => {
@@ -51,5 +51,17 @@ test.describe('SauceDemo Login Tests', () => {
     const displayedUsernames = await loginPage.getDisplayedUserNames();
     const expectedUsernames = Object.values(users).map(user => user.username);
     expect(displayedUsernames).toEqual(expectedUsernames);
+  });
+
+  test('Should show error message for invalid credentials', async () => {
+    await loginPage.login({ username: 'invalid_user', password: 'invalid_password' });
+    const errorText = await loginPage.getErrorMessage();
+    await expect(errorText).toContain('Epic sadface: Username and password do not match any user in this service');
+  });
+
+  test('Should show error message for empty credentials', async () => {
+    await loginPage.login({ username: '', password: '' });
+    const errorText = await loginPage.getErrorMessage();
+    await expect(errorText).toContain('Epic sadface: Username is required');
   });
 });
