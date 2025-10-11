@@ -9,3 +9,12 @@ node_modules/
 
 # WARP configuration
 WARP.md
+
+# Test artifacts
+/test-results/
+**/test-results/
+/screenshots/
+**/screenshots/
+/tests/**/test-results-snapshots/
+/tests/**/*-snapshots/
+**/*-snapshots/
