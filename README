@@ -1,27 +1,70 @@
-This project is a Playwright + TypeScript automation suite for testing the functionality of SauceDemo. It demonstrates the use of Page Object Model (POM), centralized configuration, and reusable test methods to build maintainable and scalable automated tests.
+# Playwright E2E Tests (SauceDemo)
 
-Features
+End-to-end tests built with Playwright Test + TypeScript for https://www.saucedemo.com.
+This project demonstrates a Page Object Model (POM), centralized configuration, and reusable flows.
 
-Page Object Model (POM): Encapsulates page elements and actions in classes for clean, reusable, and maintainable code.
+## Features
+- Page Object Model (POM): reusable, typed page actions and selectors
+- Centralized config: URLs and user credentials in a single place
+- Multi-user coverage: standard, lockedOut, problem, performanceGlitch, error, visual
+- Visual checks: HTML report, optional screenshots and video on failure
+- CI ready: GitHub Actions workflow
 
-Centralized configuration: Stores URLs, test users, and passwords in a config file for easy updates and environment management.
+## Folder structure
 
-Reusable methods: Supports granular actions like entering username, entering password, clicking login, and a full login flow.
+```
+.
+├── config.ts                # Shared URLs and test users
+├── pages/
+│   └── login.ts             # Login page object (LoginPage)
+├── tests/
+│   └── login.spec.ts        # Scenarios using LoginPage + fixtures/assertions
+├── types/
+│   └── user.ts              # Shared types for credentials
+├── playwright.config.ts     # Playwright Test configuration
+├── package.json
+├── .github/
+│   └── workflows/
+│       └── playwright.yml   # CI workflow
+├── test-results/            # Generated: raw test artifacts (after runs)
+└── playwright-report/       # Generated: HTML report (after runs)
+```
 
-Multi-user testing: Easily run tests for different user types (standard, locked out, problem, performance glitch, etc.) using a single user object structure.
+## Setup
+- Install dependencies: `npm install`
+- Install browsers (first run or after updates): `npx playwright install`
 
-Verification utilities: Methods to verify UI elements like displayed login credentials.
+## Running tests
+- All tests: `npx playwright test`
+- Single spec file: `npx playwright test tests/login.spec.ts`
+- Single test by title: `npx playwright test -g "Standard user should log in successfully"`
+- Specific browser project: `npx playwright test --project=chromium`
+- Headed/debug mode: `npx playwright test --headed` or `npx playwright test --debug`
+- UI mode: `npx playwright test --ui`
+- View HTML report (after a run): `npx playwright show-report`
 
-Playwright + TypeScript: Leverages modern testing tools with type safety, async/await syntax, and robust browser automation.
+## Configuration
+- File: `playwright.config.ts`
+  - testDir: `tests`
+  - Projects: `chromium`, `firefox`, `webkit`
+  - Reporter: `html`
+  - Retries: `2` on CI
+  - Trace: `on-first-retry`
+  - Screenshots: `only-on-failure`
+  - Video: `retain-on-failure`
 
-Project Structure:
-/pages
-  └── LoginPage.ts       # POM class for login page
-/tests
-  └── login.spec.ts      # Test scenarios using LoginPage
-/config
-  └── config.ts          # URLs, users, and passwords
+## Shared test data
+- File: `config.ts`
+  - `LOGIN_URL` for the SauceDemo login page
+  - `users` map for credentials across personas: `standard`, `lockedOut`, `problem`, `performanceGlitch`, `error`, `visual`
 
-Commands:
-Install dependencies: npm install
-Run tests: npx playwright test
+## Notes
+- No separate build step is required; Playwright runs TypeScript tests directly.
+- Linting configuration is not present in this repo.
+
+## Continuous Integration
+- Workflow: `.github/workflows/playwright.yml`
+  - `npm ci`
+  - `npx playwright install --with-deps`
+  - `npx playwright test`
+  - Uploads the HTML report artifact (`playwright-report`)
